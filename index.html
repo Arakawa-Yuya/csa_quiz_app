@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+<meta name="theme-color" content="#1f6feb" />
+<title>ServiceNow CSA クイズ学習アプリ</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📘</text></svg>" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="app">
+
+  <!-- ===== ホーム画面 ===== -->
+  <section id="screen-home" class="screen active">
+    <header class="app-header">
+      <h1>📘 ServiceNow CSA クイズ</h1>
+      <p class="subtitle">ILT重要ポイントで試験対策</p>
+    </header>
+
+    <div class="card stats-card">
+      <div class="stat">
+        <span class="stat-num" id="stat-total">-</span>
+        <span class="stat-label">全問題数</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="stat-wrong">-</span>
+        <span class="stat-label">要復習</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="stat-fav">-</span>
+        <span class="stat-label">お気に入り</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title">出題モード</h2>
+      <div class="mode-list" id="mode-list">
+        <label class="mode-item">
+          <input type="radio" name="mode" value="all" checked />
+          <span>全問題からランダム出題</span>
+        </label>
+        <label class="mode-item">
+          <input type="radio" name="mode" value="wrong" />
+          <span>間違えた問題を復習 <em id="wrong-count-inline"></em></span>
+        </label>
+        <label class="mode-item">
+          <input type="radio" name="mode" value="favorite" />
+          <span>お気に入りのみ出題 <em id="fav-count-inline"></em></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title">出題数</h2>
+      <div class="count-list" id="count-list">
+        <button type="button" class="count-btn" data-count="5">5問</button>
+        <button type="button" class="count-btn" data-count="10">10問</button>
+        <button type="button" class="count-btn" data-count="20">20問</button>
+        <button type="button" class="count-btn" data-count="all">全問</button>
+      </div>
+    </div>
+
+    <button id="btn-start" class="btn-primary">クイズを開始する</button>
+    <p class="hint">💡 選択肢はタップまたは数字キー(1〜4)で回答できます。回答すると自動で採点・解説を表示し、次の問題ボタンで進みます。</p>
+  </section>
+
+  <!-- ===== クイズ画面 ===== -->
+  <section id="screen-quiz" class="screen">
+    <div class="quiz-topbar">
+      <button id="btn-quit" class="icon-btn" title="ホームに戻る">✕</button>
+      <div class="progress-wrap">
+        <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+        <span id="progress-text">1 / 10</span>
+      </div>
+      <div class="score-badge">正解 <span id="score-live">0</span></div>
+    </div>
+
+    <div class="card question-card">
+      <div class="q-meta">
+        <span class="q-type-badge" id="q-type-badge">選択問題</span>
+        <span class="q-no-badge" id="q-no-badge">表No. -</span>
+        <button id="btn-fav" class="fav-btn" title="お気に入りに追加">☆</button>
+      </div>
+      <p class="q-text" id="q-text">問題文</p>
+      <div class="choices" id="choices"></div>
+    </div>
+
+    <div id="feedback-card" class="card feedback-card hidden">
+      <div id="feedback-result" class="feedback-result"></div>
+      <div class="explanation">
+        <strong>解説（該当表No. <span id="exp-no"></span>）</strong>
+        <p id="exp-text"></p>
+      </div>
+      <button id="btn-next" class="btn-primary">次の問題へ →</button>
+    </div>
+  </section>
+
+  <!-- ===== 結果画面 ===== -->
+  <section id="screen-result" class="screen">
+    <header class="app-header">
+      <h1 id="result-title">🎉 結果発表</h1>
+    </header>
+    <div class="card result-summary">
+      <div class="result-score" id="result-score">0 / 0</div>
+      <div class="result-rate" id="result-rate">正答率 0%</div>
+    </div>
+
+    <div class="card" id="result-wrong-card">
+      <h2 class="card-title">今回間違えた問題</h2>
+      <ul id="result-wrong-list" class="review-list"></ul>
+    </div>
+
+    <div class="button-row">
+      <button id="btn-restart" class="btn-primary">もう一度挑戦する</button>
+      <button id="btn-home" class="btn-secondary">ホームへ戻る</button>
+    </div>
+  </section>
+
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
