@@ -4,6 +4,7 @@
 
   const LS_WRONG = "csa_quiz_wrong_ids";
   const LS_FAV = "csa_quiz_fav_ids";
+  const LS_THEME = "csa_quiz_theme";
 
   const el = (id) => document.getElementById(id);
 
@@ -57,14 +58,40 @@
     return r ? r.value : "all";
   }
 
+  function currentQType() {
+    const r = document.querySelector('input[name="qtype"]:checked');
+    return r ? r.value : "mixed"; // mixed / single / scenario
+  }
+
   // ---------- ホーム画面更新 ----------
   function refreshHome() {
+    const singleTotal = QUIZ_DATA.filter((q) => q.type === "single").length;
+    const scenarioTotal = QUIZ_DATA.filter((q) => q.type === "scenario").length;
+
     el("stat-total").textContent = QUIZ_DATA.length;
     el("stat-wrong").textContent = wrongIds.size;
     el("stat-fav").textContent = favIds.size;
     el("wrong-count-inline").textContent = wrongIds.size ? `(${wrongIds.size}問)` : "(0問)";
     el("fav-count-inline").textContent = favIds.size ? `(${favIds.size}問)` : "(0問)";
+    el("mixed-count-inline").textContent = `(全${QUIZ_DATA.length}問)`;
+    el("single-count-inline").textContent = `(${singleTotal}問)`;
+    el("scenario-count-inline").textContent = `(${scenarioTotal}問)`;
   }
+
+  // ---------- テーマ切替 ----------
+  function applyTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    document.querySelectorAll(".theme-btn").forEach((b) => {
+      b.classList.toggle("selected", b.dataset.theme === theme);
+    });
+    try { localStorage.setItem(LS_THEME, theme); } catch (e) { /* no-op */ }
+  }
+  document.querySelectorAll(".theme-btn").forEach((btn) => {
+    btn.addEventListener("click", () => applyTheme(btn.dataset.theme));
+  });
+  applyTheme((() => {
+    try { return localStorage.getItem(LS_THEME) || "light"; } catch (e) { return "light"; }
+  })());
 
   // ---------- 出題数ボタン ----------
   document.querySelectorAll(".count-btn").forEach((btn) => {
@@ -80,6 +107,7 @@
   // ---------- クイズ開始 ----------
   el("btn-start").addEventListener("click", () => {
     const mode = currentMode();
+    const qtype = currentQType();
     let pool;
     if (mode === "wrong") {
       pool = QUIZ_DATA.filter((q) => wrongIds.has(q.id));
@@ -95,6 +123,15 @@
       }
     } else {
       pool = QUIZ_DATA.slice();
+    }
+
+    if (qtype !== "mixed") {
+      pool = pool.filter((q) => q.type === qtype);
+      if (pool.length === 0) {
+        const label = qtype === "single" ? "四択暗記問題" : "シナリオ問題";
+        alert(`選択中の出題モードでは「${label}」が見つかりませんでした。条件を変更してください。`);
+        return;
+      }
     }
 
     pool = shuffle(pool); // ランダム出題・重複なし（同一問題は1回のみプール内に存在）
@@ -126,7 +163,7 @@
       typeBadge.textContent = "シナリオ問題";
       typeBadge.classList.add("scenario");
     } else {
-      typeBadge.textContent = "選択問題";
+      typeBadge.textContent = "四択暗記問題";
       typeBadge.classList.remove("scenario");
     }
     el("q-no-badge").textContent = `表No. ${q.no}`;
@@ -257,7 +294,7 @@
         const li = document.createElement("li");
         li.className = "review-item";
         li.innerHTML = `
-          <div class="r-meta">表No. ${r.q.no} ／ ${r.q.type === "scenario" ? "シナリオ問題" : "選択問題"}</div>
+          <div class="r-meta">表No. ${r.q.no} ／ ${r.q.type === "scenario" ? "シナリオ問題" : "四択暗記問題"}</div>
           <div class="r-q">${r.q.question}</div>
           <div class="r-ans">あなたの回答: ${r.q.choices[r.chosenIndex]}<br>
           正解: <span class="ok">${r.q.choices[r.q.answer]}</span></div>

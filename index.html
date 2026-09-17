@@ -52,6 +52,33 @@
     </div>
 
     <div class="card">
+      <h2 class="card-title">問題タイプ</h2>
+      <div class="mode-list" id="type-list">
+        <label class="mode-item">
+          <input type="radio" name="qtype" value="mixed" checked />
+          <span>両方をランダムに出題 <em id="mixed-count-inline"></em></span>
+        </label>
+        <label class="mode-item">
+          <input type="radio" name="qtype" value="single" />
+          <span>四択暗記問題のみ <em id="single-count-inline"></em></span>
+        </label>
+        <label class="mode-item">
+          <input type="radio" name="qtype" value="scenario" />
+          <span>シナリオ問題のみ <em id="scenario-count-inline"></em></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title">表示テーマ</h2>
+      <div class="count-list theme-list" id="theme-list">
+        <button type="button" class="count-btn theme-btn" data-theme="light">☀ ライト</button>
+        <button type="button" class="count-btn theme-btn" data-theme="gray">◐ グレー</button>
+        <button type="button" class="count-btn theme-btn" data-theme="dark">● 黒</button>
+      </div>
+    </div>
+
+    <div class="card">
       <h2 class="card-title">出題数</h2>
       <div class="count-list" id="count-list">
         <button type="button" class="count-btn" data-count="5">5問</button>
