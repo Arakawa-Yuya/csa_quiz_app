@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#1f6feb" />
 <title>ServiceNow CSA クイズ学習アプリ</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📘</text></svg>" />
-<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="style.css?v=3" />
 </head>
 <body>
 <div id="app">
@@ -31,6 +31,10 @@
         <span class="stat-num" id="stat-fav">-</span>
         <span class="stat-label">お気に入り</span>
       </div>
+      <div class="stat">
+        <span class="stat-num" id="stat-unseen">-</span>
+        <span class="stat-label">未出題</span>
+      </div>
     </div>
 
     <div class="card">
@@ -47,6 +51,10 @@
         <label class="mode-item">
           <input type="radio" name="mode" value="favorite" />
           <span>お気に入りのみ出題 <em id="fav-count-inline"></em></span>
+        </label>
+        <label class="mode-item">
+          <input type="radio" name="mode" value="unseen" />
+          <span>未出題の問題のみ出題 <em id="unseen-count-inline"></em></span>
         </label>
       </div>
     </div>
@@ -146,7 +154,7 @@
 
 </div>
 
-<script src="data.js"></script>
-<script src="app.js"></script>
+<script src="data.js?v=3"></script>
+<script src="app.js?v=3"></script>
 </body>
 </html>

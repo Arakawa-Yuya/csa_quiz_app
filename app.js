@@ -5,6 +5,7 @@
   const LS_WRONG = "csa_quiz_wrong_ids";
   const LS_FAV = "csa_quiz_fav_ids";
   const LS_THEME = "csa_quiz_theme";
+  const LS_SEEN = "csa_quiz_seen_ids";
 
   const el = (id) => document.getElementById(id);
 
@@ -25,6 +26,7 @@
 
   let wrongIds = loadSet(LS_WRONG);
   let favIds = loadSet(LS_FAV);
+  let seenIds = loadSet(LS_SEEN);
 
   // ---------- 出題状態 ----------
   let session = {
@@ -67,12 +69,15 @@
   function refreshHome() {
     const singleTotal = QUIZ_DATA.filter((q) => q.type === "single").length;
     const scenarioTotal = QUIZ_DATA.filter((q) => q.type === "scenario").length;
+    const unseenCount = QUIZ_DATA.filter((q) => !seenIds.has(q.id)).length;
 
     el("stat-total").textContent = QUIZ_DATA.length;
     el("stat-wrong").textContent = wrongIds.size;
     el("stat-fav").textContent = favIds.size;
+    el("stat-unseen").textContent = unseenCount;
     el("wrong-count-inline").textContent = wrongIds.size ? `(${wrongIds.size}問)` : "(0問)";
     el("fav-count-inline").textContent = favIds.size ? `(${favIds.size}問)` : "(0問)";
+    el("unseen-count-inline").textContent = `(${unseenCount}問)`;
     el("mixed-count-inline").textContent = `(全${QUIZ_DATA.length}問)`;
     el("single-count-inline").textContent = `(${singleTotal}問)`;
     el("scenario-count-inline").textContent = `(${scenarioTotal}問)`;
@@ -119,6 +124,12 @@
       pool = QUIZ_DATA.filter((q) => favIds.has(q.id));
       if (pool.length === 0) {
         alert("お気に入り登録された問題がまだありません。問題画面の☆マークから登録できます。");
+        return;
+      }
+    } else if (mode === "unseen") {
+      pool = QUIZ_DATA.filter((q) => !seenIds.has(q.id));
+      if (pool.length === 0) {
+        alert("すべての問題を一度は出題済みです！素晴らしい学習の成果です。");
         return;
       }
     } else {
@@ -214,6 +225,10 @@
       wrongIds.add(q.id);
     }
     saveSet(LS_WRONG, wrongIds);
+
+    // 出題済み履歴の更新（未出題リスト管理）
+    seenIds.add(q.id);
+    saveSet(LS_SEEN, seenIds);
 
     session.results.push({ q, chosenIndex: choiceIndex, correct });
 

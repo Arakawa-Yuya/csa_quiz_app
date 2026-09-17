@@ -81,10 +81,10 @@ html, body {
 }
 .card-title { margin: 0 0 10px; font-size: 1rem; }
 
-.stats-card { display: flex; justify-content: space-around; text-align: center; }
-.stat { display: flex; flex-direction: column; }
-.stat-num { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
-.stat-label { font-size: .75rem; color: var(--text-muted); margin-top: 2px; }
+.stats-card { display: flex; flex-wrap: wrap; justify-content: space-around; text-align: center; gap: 10px; }
+.stat { display: flex; flex-direction: column; min-width: 64px; }
+.stat-num { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+.stat-label { font-size: .72rem; color: var(--text-muted); margin-top: 2px; }
 
 .mode-list { display: flex; flex-direction: column; gap: 10px; }
 .mode-item {
